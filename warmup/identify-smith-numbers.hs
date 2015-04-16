@@ -1,4 +1,5 @@
-smith x | isPrime x = 0
+smith x | x == 1 = 0
+        | isPrime x = 0
         | digitsum x == factorsum x = 1
         | otherwise = 0
 
@@ -14,7 +15,7 @@ digitsum x = foldl1 (+) (digs x) where
 main = do
   n <- readLn :: IO Int
   print $ smith n
-  
+
 --fast prime finding
 isPrime x | x < 2 = False
           | x < 4 = True
