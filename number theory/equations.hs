@@ -2,11 +2,9 @@ solve x = foldl (\z y -> z*(1+2*rdiv x y) `mod` 1000007) 1 (takeWhile (<=x) prim
 
 --rdiv calculates the multiplicity of a prime factor in N!
 --by summing repeated divisions of N by p
---My intuition is that there is a closed-form solution to this that would save considerable time.
---failing that, dynamic programming would help.
 rdiv n p = g p 0 where
   g x s | x > n = s
-        | otherwise =  g (x*p) (s+ n `div` x)
+        | otherwise =  g (x*p) (s + n `div` x)
 
 --Tree merging with wheel sieve.
 primes = [2,3,5,7] ++ _Y ((11:) . tail . gapsW 11 wheel . joinT . hitsW 11 wheel)
@@ -29,3 +27,7 @@ union (x:xs) (y:ys) = case (compare x y) of
   GT -> y:union (x:xs) ys
 union xs [] = xs
 union [] ys = ys
+
+main = do
+  n <- readLn :: IO Int
+  print $ solve n
