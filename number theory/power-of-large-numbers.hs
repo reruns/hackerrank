@@ -1,5 +1,6 @@
 import Control.Monad
 
+--Not fast enough :<
 --modular exponentiation
 solve :: Integer -> Integer -> Integer
 solve x y = f x y 1 where
@@ -13,4 +14,4 @@ main = do
   replicateM_ t $ do
     cstr <- getLine
     let [a,b] = map read $ words cstr
-    print $ solve a b 
+    print $ solve a b

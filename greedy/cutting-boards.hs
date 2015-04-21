@@ -1,6 +1,7 @@
 import Data.List
 import Control.Monad
 
+--this is wrong! I think I have a hunch as to why.
 solve m n = f 1 1 (reverse$sort m) (reverse$sort n) 0 where
   f _ _ [] [] s = s
   f a b [] (y:ys) s = f a b [] ys (s+b*y)
