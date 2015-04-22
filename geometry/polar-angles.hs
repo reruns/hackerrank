@@ -2,16 +2,25 @@ import Data.List
 import Control.Monad
 import GHC.Float
 
-solve points = unlines $ map pairToNaked (sortBy (sortAngle (0,0)) points)
+--put it all together, with some processing
+--most of this would look nice in main, but I prefer this convention
+solve points = unlines $ map pairToNaked (sortBy sortAngle points)
 pairToNaked (x,y) = unwords [show x, show y]
 
-distance :: (Int, Int) -> (Int, Int) -> Double
-distance (x_1, y_1) (x_2, y_2) = float2Double $ sqrt $ (x2 - x1)**2 + (y2 - y1)**2
-                                 where x1 = fromIntegral x_1
-                                       y1 = fromIntegral y_1
-                                       x2 = fromIntegral x_2
-                                       y2 = fromIntegral y_2
-                                       
+--A special comparator so we fall back to distance
+sortAngle q1 q2
+  | a1 == a2 = compare (dist0 q1) (dist0 q2)
+  | otherwise = compare a1 a2
+  where a1 = ang0 q1
+        a2 = ang0 q2
+
+--distance from origin
+dist0 :: (Int, Int) -> Double
+dist0 (x_1, y_1) = float2Double $ sqrt $ (x1)**2 + (y1)**2 where
+              x1 = fromIntegral x_1
+              y1 = fromIntegral y_1
+
+--angle with positive x-axis
 ang0 :: (Int, Int) -> Double
 ang0 (x,y) | x < 0 = pi + a
            | y < 0 = 2 * pi + a
@@ -19,13 +28,6 @@ ang0 (x,y) | x < 0 = pi + a
              where x1 = fromIntegral x
                    y1 = fromIntegral y
                    a = atan (y1 / x1)
-
-sortAngle p q1 q2
-  | a1 < a2 = LT
-  | a1 > a2 = GT
-  | a1 == a2 = compare (distance p q1) (distance p q2)
-  where a1 = ang0 q1
-        a2 = ang0 q2
 
 main :: IO ()
 main = do
