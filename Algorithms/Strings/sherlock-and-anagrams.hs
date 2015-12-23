@@ -1,16 +1,12 @@
---this is totally wrong, duh.
+import Data.List
+import Control.Monad
 
+substrings xs = concat $ scanl (\r x -> [x]:(map (x:) r)) [] xs 
 
--- sol x = f x 0 1
---
--- f 0 s c = s
--- f a s c = f (a-1) (s+c') c' where
---   c' = c*a
---
--- ans string = sol $ foldl (\z x-> z + div (length x) 2) 0 (group$sort string)
---
--- main = do
---   t <- readLn :: IO Int
---   replicateM_ t $ do
---     s <- getLine
---     print $ ans s
+solve x = (foldr (\x r -> r + div ((x-1)*x) 2) 0 $ (map length) ((group.sort) (map sort (substrings x))))
+
+main = do
+    t <- readLn :: IO Int
+    replicateM_ t $ do
+        s <- getLine
+        print $ solve s
