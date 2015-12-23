@@ -5,6 +5,11 @@
 #include <algorithm>
 using namespace std;
 
+//This does the same thing as cut-the-tree.rb
+//but because it's c++, the stack depth and memory limits are not an issue.
+
+//Personally, I think it's a bit silly that we have to do this.
+
 int value[100001], n, tot, best;
 vector<vector<int> > v;
 bool visited[100001];
