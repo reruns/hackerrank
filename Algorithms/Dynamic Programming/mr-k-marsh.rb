@@ -23,39 +23,31 @@ class Marsh
         end
     end
     
-    def maxperim()
-        q = [[0,0,@m-1,@n-1]]
-        m = 0
-        while(!q.empty?)
-            k = q.pop
-            if @perim.has_key?(k)
-                m = @perim[k] > m ? @perim[k] : m
-            else
-                @perim[k] = 0
-                yi, xi, yf, xf = k
-                p = (yf-yi)*2 + (xf-xi)*2
-                next if xi >= xf || yi >= yf || p <= m
-                
-                if @left[yi][xf] < xf - xi
-                    l = @left[yi][xf]
-                    q.push([yi,xf-l,yf,xf],[yi,xi,yf,xf-l-2],[yi+1,xi,yf,xf])
-                elsif @up[yf][xi] < yf - yi
-                    u = @up[yf][xi]
-                    q.push([yf-u,xi,yf,xf], [yi,xi,yf-u-2,xf],[yi,xi+1,yf,xf])
-                elsif @up[yf][xf] < yf - yi
-                    u = @up[yf][xf]
-                    q.push([yf-u,xi,yf,xf], [yi,xi,yf-u-2,xf],[yi,xi,yf,xf-1])
-                elsif @left[yf][xf] < xf - xi
-                    l = @left[yf][xf]
-                    q.push([yi,xf-l,yf,xf], [yi,xi,yf,xf-l-2], [yi,xi,yf-1,xf])
-                else #we're done!
-                    @perim[k] = p
-                    m = p > m ? p : m
-                end 
+    def perimSearch()
+        best = 0
+        (0..@m-2).each do |py|
+            (0..@n-2).each do |j|
+                px = @n - j - 1
+                l = left[py][px]
+                if l >= 1 #We have a valid top row
+                    (py+1..@m-1).each do |ty| #Search potential bottom rows
+                        break if up[ty][px] < ty-py
+                        if up[ty][px-l] < ty-py
+                            while up[ty][px-l] < ty-py && l > 0
+                                l -= 1
+                            end
+                            next
+                        end
+                        break if l == 0
+                        perim = 2*l + 2*(ty-py)
+                        next if perim <= best #Too small to matter.
+                        next if left[ty][px] < l #There's an X on this row somewhere
+                        best = perim
+                    end
+                end
             end
         end
-        @perim[[0,0,@m-1,@n-1]] = m
-        m
+        best
     end
 end
 
