@@ -1,13 +1,17 @@
-import Data.List
-import qualified Data.Map as M
+import System.IO
 
-mcandy n = (M.fromList (map (\x -> (x,candy (show x))) [0..])) M.! n
-
-candy :: String -> Int
-candy m = if (read m) <= 9
-          then (read m)
-          else (read m) + (mcandy (tail m)) + (mcandy (init m))
-    
+--Tail recursion is very important.
+solve :: String -> Integer
+solve n = f (reverse n) 0 0 0  where
+    f :: String -> Integer -> Integer -> Int -> Integer
+    f [] s _ _ = s
+    f (n:ns) s ts i = let nt = (ts * 10 + 1) `mod` m
+                          num = read [n] in
+                      f ns (s + (num * nt * (toInteger $ l-i)) `mod` m) nt (i+1)     
+    l = length n
+  
+m = 10^9 + 7  
 main = do
-    n <- readLn :: IO Int
-    print $ mcandy n
+    h <- openFile "testinput.txt" ReadMode
+    n <- hGetContents h
+    print $ (solve n) `mod` m
